@@ -19,11 +19,11 @@ payload = [{"method": "GET"}, {"method": "POST"}, {"method": "PUT"}, {"method": 
 for elem in payload:
     response = requests.get(url, params=elem)
     print(f"Тип запроса get, параметр method {elem.get('method')}, ответ: {response.text}")
-    response = requests.post(url, params=elem)
+    response = requests.post(url, data=elem)
     print(f"Тип запроса post, параметр method {elem.get('method')}, ответ: {response.text}")
-    response = requests.put(url, params=elem)
+    response = requests.put(url, data=elem)
     print(f"Тип запроса put, параметр method {elem.get('method')}, ответ: {response.text}")
-    response = requests.delete(url, params=elem)
+    response = requests.delete(url, data=elem)
     print(f"Тип запроса delete, параметр method {elem.get('method')}, ответ: {response.text}")
     print()
 
