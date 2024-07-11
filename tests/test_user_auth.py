@@ -1,6 +1,7 @@
 import requests
 import pytest
 from lib.base_case import BaseCase
+from lib.assertions import Assertions
 
 class Test_User_Auth(BaseCase):
 
@@ -25,11 +26,10 @@ class Test_User_Auth(BaseCase):
         response_2 = requests.get(self.url_2, headers={"x-csrf-token": self.token},
                                   cookies={"auth_sid": self.auth_sid})
 
-        assert "user_id" in response_2.json(), "Во втором ответе отсутствует ключ user_id"
-
-        user_id_from_check_method = response_2.json().get("user_id")
-        assert self.user_id_from_auth_method == user_id_from_check_method, \
-            "user_id_from_auth_method не соответствует user_id_from_check_method"
+        Assertions.assert_json_value_by_name(response_2,
+                                             "user_id",
+                                             self.user_id_from_auth_method,
+                                             "user_id_from_auth_method не соответствует user_id_from_check_method")
 
 
     @pytest.mark.parametrize('condition', exclude_params)
@@ -39,8 +39,8 @@ class Test_User_Auth(BaseCase):
         else:
             response_2 = requests.get(self.url_2, cookies={"auth_sid": self.auth_sid})
 
-        assert "user_id" in response_2.json(), "Во втором ответе отсутствует ключ user_id"
-
-        user_id_from_check_method = response_2.json()["user_id"]
-        assert user_id_from_check_method == 0, "Пользователь авторизован с {}".format(condition)
+        Assertions.assert_json_value_by_name(response_2,
+                                             "user_id",
+                                             0,
+                                             "Пользователь авторизован с {}".format(condition))
 
