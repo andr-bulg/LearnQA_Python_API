@@ -6,4 +6,6 @@
 lesson_3/__init__.py
 lesson_3/.pytest_cache
 .pytest_cache
+lib/__init__.py
+tests/__init__.py
 

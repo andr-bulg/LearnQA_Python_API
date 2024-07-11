@@ -1,12 +1,13 @@
 import requests
 import pytest
+from lib.base_case import BaseCase
 
-class Test_User_Auth:
+class Test_User_Auth(BaseCase):
 
     exclude_params = [("no_cookie"),
                       ("no_token")]
 
-    def setup(self):
+    def setup_method(self):
         payload = {
             "email": "vinkotov@example.com",
             "password": "1234"
@@ -15,13 +16,10 @@ class Test_User_Auth:
         self.url_2 = "https://playground.learnqa.ru/api/user/auth"
 
         response_1 = requests.post(self.url_1, data=payload)
+        self.auth_sid = self.get_cookie(response_1, "auth_sid")
+        self.token = self.get_header(response_1, "x-csrf-token")
+        self.user_id_from_auth_method = self.get_json_value(response_1, "user_id")
 
-        assert "auth_sid" in response_1.cookies, "В ответе отсутствует куки аутентификации"
-        assert "x-csrf-token" in response_1.headers, "В ответе отсутствует заголовок x-csrf-token"
-        assert "user_id" in response_1.json(), "В ответе отсутствует ключ user_id"
-        self.auth_sid = response_1.cookies.get("auth_sid")
-        self.token = response_1.headers.get("x-csrf-token")
-        self.user_id_from_auth_method = response_1.json().get("user_id")
 
     def test_user_auth(self):
         response_2 = requests.get(self.url_2, headers={"x-csrf-token": self.token},
