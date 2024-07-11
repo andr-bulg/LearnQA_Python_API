@@ -3,3 +3,7 @@
 /lesson_2/__init__.py
 /lesson_2_homework/__init__.py
 /lesson_1_homework/__init__.py
+lesson_3/__init__.py
+lesson_3/.pytest_cache
+.pytest_cache
+

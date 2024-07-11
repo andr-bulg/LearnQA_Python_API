@@ -9,7 +9,7 @@ print(response_1.text)
 response_2 = requests.head(url)
 print(response_2.text)
 
-response_3 = requests.delete(url, params=payload)
+response_3 = requests.delete(url, data=payload)
 print(response_3.text)
 print()
 
