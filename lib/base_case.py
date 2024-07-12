@@ -1,7 +1,9 @@
 import json
-
 from requests import Response
+
+
 class BaseCase:
+
     def get_cookie(self, response: Response, cookie_name):
         assert cookie_name in response.cookies, f"Не найден куки {cookie_name} в последнем ответе"
         return response.cookies[cookie_name]
