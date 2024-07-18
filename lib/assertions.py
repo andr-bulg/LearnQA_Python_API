@@ -23,6 +23,24 @@ class Assertions:
 
         assert name in response_as_dict, f"Ключ {name} отсутствует в JSON ответе"
 
+    @staticmethod
+    def assert_json_has_keys(response: Response, names: list):
+        try:
+            response_as_dict = response.json()
+        except json.JSONDecodeError:
+            assert False, f"Ответ представлен не в JSON формате. Текст ответа: {response.text}"
+
+        for name in names:
+            assert name in response_as_dict, f"Ключ {name} отсутствует в JSON ответе"
+
+    def assert_json_has_no_key(response: Response, name):
+        try:
+            response_as_dict = response.json()
+        except json.JSONDecodeError:
+            assert False, f"Ответ представлен не в JSON формате. Текст ответа: {response.text}"
+
+        assert name not in response_as_dict, f"JSON ответ не должен содержать ключ {name}, " \
+                                             f"но он присутствует!"
 
     @staticmethod
     def assert_code_status(response: Response, expected_status_code):

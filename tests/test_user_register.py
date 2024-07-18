@@ -19,7 +19,8 @@ class Test_User_Register(BaseCase):
             "firstName": "learnqa",
             "lastName": "learnqa",
             "email": self.email,
-            "password": "123"}
+            "password": "123"
+        }
 
         response = requests.post(self.url, data=data)
         Assertions.assert_code_status(response, 200)
@@ -33,7 +34,8 @@ class Test_User_Register(BaseCase):
             "firstName": "learnqa",
             "lastName": "learnqa",
             "email": email,
-            "password": "123"}
+            "password": "123"
+        }
 
         response = requests.post(self.url, data=data)
         Assertions.assert_code_status(response, 400)
