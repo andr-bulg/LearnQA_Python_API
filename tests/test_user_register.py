@@ -20,6 +20,8 @@ class Test_User_Register(BaseCase):
 
         response = MyRequests.post(uri, data=data)
         Assertions.assert_code_status(response, 200)
+        print("\n", response.content)
+        print(response.text)
 
 
     def test_create_user_with_existing_email(self):
@@ -87,13 +89,24 @@ class Test_User_Register(BaseCase):
                 f"content ответа {response.content}"
 
 
-    def test_create_user_with_short_firstName(self):
+    @staticmethod
+    def random_string(length):
+        """
+        Метод создаёт случайную строку заданной длинны
+        :param length: длинна строки
+        :return: случайная строка заданной длинны
+        """
+        symbols = string.ascii_letters + string.digits
+        return "".join([random.choice(symbols) for i in range(length)])
+
+
+    def test_create_user_with_very_short_firstName(self):
         """
         Создание пользователя с очень коротким именем в один символ
         """
         data = self.prepare_registration_data()
         uri = "/user"
-        data["firstName"] = "A"
+        data["firstName"] = self.random_string(1)
 
         response = MyRequests.post(uri, data=data)
         Assertions.assert_code_status(response, 400)
@@ -107,13 +120,10 @@ class Test_User_Register(BaseCase):
         """
         data = self.prepare_registration_data()
         uri = "/user"
-
-        symbols = string.ascii_letters + string.digits
-        n = 251
-        first_name = "".join([random.choice(symbols) for i in range(n)])
-        data["firstName"] = first_name
+        data["firstName"] = self.random_string(251)
 
         response = MyRequests.post(uri, data=data)
         Assertions.assert_code_status(response, 400)
         assert response.content.decode("utf-8") == f"The value of 'firstName' field is too long", \
             f"content ответа {response.content}"
+
