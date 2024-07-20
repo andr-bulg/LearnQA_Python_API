@@ -60,4 +60,3 @@ class Test_Get_User(BaseCase):
         Assertions.assert_json_has_no_key(response_3, "firstName")
         Assertions.assert_json_has_no_key(response_3, "lastName")
 
-
