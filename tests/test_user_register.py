@@ -37,7 +37,7 @@ class Test_User_Register(BaseCase):
 
     def test_create_user_without_symbol_at(self):
         """
-        Создание пользователя с некорректным email - без символа @
+        Тест на создание пользователя с некорректным email - без символа @
         """
         email = "some_user_example.com"
         data = self.prepare_registration_data(email)
@@ -52,7 +52,7 @@ class Test_User_Register(BaseCase):
     @pytest.mark.parametrize('condition', exclude_params)
     def test_create_user_without_field(self, condition):
         """
-        Создание пользователя без указания одного из полей
+        Тест на создание пользователя без указания одного из полей
         """
         data = self.prepare_registration_data()
         uri = "/user"
@@ -92,9 +92,9 @@ class Test_User_Register(BaseCase):
     @staticmethod
     def random_string(length):
         """
-        Метод создаёт случайную строку заданной длинны
-        :param length: длинна строки
-        :return: случайная строка заданной длинны
+        Статический метод, который создаёт и возвращает случайную строку заданной длины
+        :param length: длина строки
+        :return: случайная строка заданной длины
         """
         symbols = string.ascii_letters + string.digits
         return "".join([random.choice(symbols) for i in range(length)])
@@ -102,7 +102,7 @@ class Test_User_Register(BaseCase):
 
     def test_create_user_with_very_short_firstName(self):
         """
-        Создание пользователя с очень коротким именем в один символ
+        Тест на создание пользователя с очень коротким именем в один символ
         """
         data = self.prepare_registration_data()
         uri = "/user"
@@ -116,7 +116,7 @@ class Test_User_Register(BaseCase):
 
     def test_create_user_with_very_long_firstName(self):
         """
-        Создание пользователя с очень длинным именем - длиннее 250 символов
+        Тест на создание пользователя с очень длинным именем - длиннее 250 символов
         """
         data = self.prepare_registration_data()
         uri = "/user"

@@ -2,6 +2,7 @@ from lib.my_requests import MyRequests
 from lib.base_case import BaseCase
 from lib.assertions import Assertions
 
+
 class TestEditUser(BaseCase):
 
     def test_edit_just_created_user(self):
@@ -48,7 +49,7 @@ class TestEditUser(BaseCase):
 
     def test_edit_just_created_user_without_auth(self):
         """
-        Изменение данных пользователя, будучи неавторизованным
+        Тест на изменение данных пользователя, будучи неавторизованным
         """
 
         # Создание пользователя
@@ -68,10 +69,10 @@ class TestEditUser(BaseCase):
             f"content ответа {response_2.content}"
 
 
-    def test_edit_just_created_user_auth_as_different_static_user(self):
+    def test_edit_just_created_user_auth_as_existing_static_user(self):
         """
-        Изменение данных одного пользователя,
-        будучи авторизованными другим СТАТИЧЕСКИМ пользователем
+        Тест на изменение данных одного пользователя,
+        будучи авторизованными существующим СТАТИЧЕСКИМ пользователем
         """
 
         # Создание пользователя
@@ -81,7 +82,7 @@ class TestEditUser(BaseCase):
         Assertions.assert_code_status(response_1, 200)
         user_id = self.get_json_value(response_1, "id")
 
-        # Авторизация другого статического пользователя
+        # Авторизация существующего статического пользователя
         login_data = {
             "email": "vinkotov@example.com",
             "password": "1234"
@@ -90,7 +91,7 @@ class TestEditUser(BaseCase):
         response_2 = MyRequests.post(uri_2, data=login_data)
 
         # Попытка редактирования данных созданного пользователя
-        # с авторизацией под другим статическим пользователем
+        # с авторизацией существующим статическим пользователем
         new_name = "Changed Name"
         auth_sid = self.get_cookie(response_2, "auth_sid")
         token = self.get_header(response_2, "x-csrf-token")
@@ -105,7 +106,8 @@ class TestEditUser(BaseCase):
 
     def test_edit_just_created_user_auth_as_different_user(self):
         """
-        Изменение данных пользователя, будучи авторизованными другим обычным пользователем
+        Тест на изменение данных пользователя,
+        будучи авторизованными другим обычным пользователем
         """
 
         # Создание первого пользователя
@@ -129,8 +131,8 @@ class TestEditUser(BaseCase):
         }
         response_3 = MyRequests.post(uri_2, data=login_data)
 
-        # Попытка редактирования данных созданного пользователя
-        # с авторизацией под другим созданным пользователем
+        # Попытка редактирования данных первого пользователя
+        # с авторизацией вторым созданным пользователем
         new_name = "Changed Name"
         auth_sid = self.get_cookie(response_3, "auth_sid")
         token = self.get_header(response_3, "x-csrf-token")
@@ -145,7 +147,7 @@ class TestEditUser(BaseCase):
 
     def test_edit_user_email_auth_as_same_user(self):
         """
-        Изменение email пользователя, будучи авторизованными тем же пользователем,
+        Тест на изменение email пользователя, будучи авторизованными тем же пользователем,
         на новый email без символа @
         """
         # Создание и авторизация пользователя
@@ -180,7 +182,7 @@ class TestEditUser(BaseCase):
 
     def test_edit_user_first_name_auth_as_same_user(self):
         """
-        Изменение firstName пользователя, будучи авторизованными тем же пользователем,
+        Тест на изменение firstName пользователя, будучи авторизованными тем же пользователем,
         на очень короткое значение в один символ
         """
         # Создание и авторизация пользователя

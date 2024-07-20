@@ -4,6 +4,7 @@ from lib.base_case import BaseCase
 from lib.assertions import Assertions
 import allure
 
+
 @allure.epic("Сценарии авторизации")
 class Test_User_Auth(BaseCase):
 
