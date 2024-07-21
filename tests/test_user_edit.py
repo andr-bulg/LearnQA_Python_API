@@ -1,10 +1,18 @@
 from lib.my_requests import MyRequests
 from lib.base_case import BaseCase
 from lib.assertions import Assertions
+import allure
 
+@allure.parent_suite("Тесты")
+@allure.suite("Набор тестов, проверяющих возможность редактировать данные пользователя")
+@allure.sub_suite("Сценарии редактирования данных пользователя")
 
+@allure.epic("Сценарии редактирования учётных данных пользователя")
 class TestEditUser(BaseCase):
 
+    @allure.tag("Testing", "Rest API", "Python")
+    @allure.label("owner", "Andrei")
+    @allure.severity(allure.severity_level.MINOR)
     def test_edit_just_created_user(self):
 
         # Регистрация нового пользователя
@@ -47,6 +55,9 @@ class TestEditUser(BaseCase):
                                              "Неверное имя пользователя после редактирования")
 
 
+    @allure.tag("Testing", "Rest API", "Python")
+    @allure.label("owner", "Andrei")
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_edit_just_created_user_without_auth(self):
         """
         Тест на изменение данных пользователя, будучи неавторизованным
@@ -69,6 +80,9 @@ class TestEditUser(BaseCase):
             f"content ответа {response_2.content}"
 
 
+    @allure.tag("Testing", "Rest API", "Python")
+    @allure.label("owner", "Andrei")
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_edit_just_created_user_auth_as_existing_static_user(self):
         """
         Тест на изменение данных одного пользователя,
@@ -104,6 +118,9 @@ class TestEditUser(BaseCase):
             f"content ответа {response_3.content}"
 
 
+    @allure.tag("Testing", "Rest API", "Python")
+    @allure.label("owner", "Andrei")
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_edit_just_created_user_auth_as_different_user(self):
         """
         Тест на изменение данных пользователя,
@@ -145,6 +162,9 @@ class TestEditUser(BaseCase):
             f"content ответа {response_4.content}"
 
 
+    @allure.tag("Testing", "Rest API", "Python")
+    @allure.label("owner", "Andrei")
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_edit_user_email_auth_as_same_user(self):
         """
         Тест на изменение email пользователя, будучи авторизованными тем же пользователем,
@@ -180,6 +200,9 @@ class TestEditUser(BaseCase):
             f"content ответа {response_3.content}"
 
 
+    @allure.tag("Testing", "Rest API", "Python")
+    @allure.label("owner", "Andrei")
+    @allure.severity(allure.severity_level.NORMAL)
     def test_edit_user_first_name_auth_as_same_user(self):
         """
         Тест на изменение firstName пользователя, будучи авторизованными тем же пользователем,

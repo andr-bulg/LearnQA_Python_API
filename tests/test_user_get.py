@@ -1,8 +1,13 @@
 from lib.my_requests import MyRequests
 from lib.base_case import BaseCase
 from lib.assertions import Assertions
+import allure
 
+@allure.parent_suite("Тесты")
+@allure.suite("Набор тестов, проверяющих возможность получения данных пользователя")
+@allure.sub_suite("Сценарии получения данных пользователя")
 
+@allure.epic("Сценарии получения учётных данных пользователя")
 class Test_Get_User(BaseCase):
     def test_get_user_details_not_auth(self):
         uri = "/user/2"
@@ -12,6 +17,10 @@ class Test_Get_User(BaseCase):
         Assertions.assert_json_has_no_key(response, "firstName")
         Assertions.assert_json_has_no_key(response, "lastName")
 
+    @allure.description("Проверка получения данных пользователя, будучи авторизованным этим пользователем")
+    @allure.tag("Testing", "Rest API", "Python")
+    @allure.label("owner", "Andrei")
+    @allure.severity(allure.severity_level.TRIVIAL)
     def test_get_user_details_auth_as_same_user(self):
         data = {
             "email": "vinkotov@example.com",
@@ -29,6 +38,10 @@ class Test_Get_User(BaseCase):
         expected_fields = ["username", "email", "firstName", "lastName"]
         Assertions.assert_json_has_keys(response_2, expected_fields)
 
+
+    @allure.tag("Testing", "Rest API", "Python")
+    @allure.label("owner", "Andrei")
+    @allure.severity(allure.severity_level.NORMAL)
     def test_get_user_details_auth_as_different_user(self):
         """
         Тест, который авторизовывается одним пользователем,

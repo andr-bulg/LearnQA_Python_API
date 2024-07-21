@@ -4,8 +4,11 @@ from lib.base_case import BaseCase
 from lib.assertions import Assertions
 import allure
 
+@allure.parent_suite("Тесты")
+@allure.suite("Набор тестов, проверяющих авторизацию пользователя")
+@allure.sub_suite("Сценарии авторизации пользователя")
 
-@allure.epic("Сценарии авторизации")
+@allure.epic("Сценарии авторизации пользователя")
 class Test_User_Auth(BaseCase):
 
     exclude_params = [("no_cookie"),

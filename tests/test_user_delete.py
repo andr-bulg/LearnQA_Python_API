@@ -1,10 +1,18 @@
 from lib.my_requests import MyRequests
 from lib.base_case import BaseCase
 from lib.assertions import Assertions
+import allure
 
+@allure.parent_suite("Тесты")
+@allure.suite("Набор тестов, проверяющих возможность удалить пользователя")
+@allure.sub_suite("Сценарии удаления пользователя")
 
+@allure.epic("Сценарии удаления пользователя")
 class TestUserDelete(BaseCase):
 
+    @allure.tag("Testing", "Rest API", "Python")
+    @allure.label("owner", "Andrei")
+    @allure.severity(allure.severity_level.MINOR)
     def test_delete_static_user_auth_as_same_user(self):
         """
         Тест на удаление статического пользователя,
@@ -31,6 +39,9 @@ class TestUserDelete(BaseCase):
             f"content ответа {response_2.content}"
 
 
+    @allure.tag("Testing", "Rest API", "Python")
+    @allure.label("owner", "Andrei")
+    @allure.severity(allure.severity_level.TRIVIAL)
     def test_delete_user_auth_as_same_user(self):
         """
         Тест на удаление обычного пользователя,
@@ -74,6 +85,9 @@ class TestUserDelete(BaseCase):
             f"content ответа {response_4.content}"
 
 
+    @allure.tag("Testing", "Rest API", "Python")
+    @allure.label("owner", "Andrei")
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_delete_user_auth_as_existing_static_user(self):
         """
         Тест на удаление обычного пользователя,
@@ -108,6 +122,9 @@ class TestUserDelete(BaseCase):
             f"content ответа {response_4.content}"
 
 
+    @allure.tag("Testing", "Rest API", "Python")
+    @allure.label("owner", "Andrei")
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_delete_user_auth_as_different_user(self):
         """
         Тест на удаление обычного пользователя,

@@ -4,8 +4,13 @@ from lib.assertions import Assertions
 import pytest
 import string
 import random
+import allure
 
+@allure.parent_suite("Тесты")
+@allure.suite("Набор тестов, проверяющих возможность регистрации пользователя")
+@allure.sub_suite("Сценарии регистрации пользователя")
 
+@allure.epic("Сценарии регистрации пользователя")
 class Test_User_Register(BaseCase):
 
     exclude_params = [("no_username"),
@@ -14,6 +19,9 @@ class Test_User_Register(BaseCase):
                       ("email"),
                       ("password")]
 
+    @allure.tag("Testing", "Rest API", "Python")
+    @allure.label("owner", "Andrei")
+    @allure.severity(allure.severity_level.BLOCKER)
     def test_create_user_successfully(self):
         data = self.prepare_registration_data()
         uri = "/user"
@@ -24,6 +32,9 @@ class Test_User_Register(BaseCase):
         print(response.text)
 
 
+    @allure.tag("Testing", "Rest API", "Python")
+    @allure.label("owner", "Andrei")
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_create_user_with_existing_email(self):
         email = "vinkotov@example.com"
         data = self.prepare_registration_data(email)
@@ -35,6 +46,9 @@ class Test_User_Register(BaseCase):
                f"content ответа {response.content}"
 
 
+    @allure.tag("Testing", "Rest API", "Python")
+    @allure.label("owner", "Andrei")
+    @allure.severity(allure.severity_level.MINOR)
     def test_create_user_without_symbol_at(self):
         """
         Тест на создание пользователя с некорректным email - без символа @
@@ -49,6 +63,9 @@ class Test_User_Register(BaseCase):
             f"content ответа {response.content}"
 
 
+    @allure.tag("Testing", "Rest API", "Python")
+    @allure.label("owner", "Andrei")
+    @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.parametrize('condition', exclude_params)
     def test_create_user_without_field(self, condition):
         """
@@ -100,6 +117,9 @@ class Test_User_Register(BaseCase):
         return "".join([random.choice(symbols) for i in range(length)])
 
 
+    @allure.tag("Testing", "Rest API", "Python")
+    @allure.label("owner", "Andrei")
+    @allure.severity(allure.severity_level.CRITICAL)
     def test_create_user_with_very_short_firstName(self):
         """
         Тест на создание пользователя с очень коротким именем в один символ
@@ -114,6 +134,9 @@ class Test_User_Register(BaseCase):
             f"content ответа {response.content}"
 
 
+    @allure.tag("Testing", "Rest API", "Python")
+    @allure.label("owner", "Andrei")
+    @allure.severity(allure.severity_level.NORMAL)
     def test_create_user_with_very_long_firstName(self):
         """
         Тест на создание пользователя с очень длинным именем - длиннее 250 символов
