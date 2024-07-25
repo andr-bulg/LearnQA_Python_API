@@ -19,7 +19,7 @@ class TestUserDelete(BaseCase):
         будучи авторизованным этим пользователем
         """
 
-        # Авторизация статического пользователя
+        # Шаг1: Авторизация статического пользователя
         login_data = {
             "email": "vinkotov@example.com",
             "password": "1234"
@@ -27,7 +27,7 @@ class TestUserDelete(BaseCase):
         uri_1 = "/user/login"
         response_1 = MyRequests.post(uri_1, data=login_data)
 
-        # Попытка удаления статического пользователя с авторизацией под этим пользователем
+        # Шаг2: Попытка удаления статического пользователя с авторизацией под этим пользователем
         auth_sid = self.get_cookie(response_1, "auth_sid")
         token = self.get_header(response_1, "x-csrf-token")
         uri_2 = "/user/2"
@@ -42,13 +42,13 @@ class TestUserDelete(BaseCase):
     @allure.tag("Testing", "Rest API", "Python")
     @allure.label("owner", "Andrei")
     @allure.severity(allure.severity_level.TRIVIAL)
-    def test_delete_user_auth_as_same_user(self):
+    def test_delete_just_created_user_auth_as_same_user(self):
         """
-        Тест на удаление обычного пользователя,
+        Тест на удаление только что созданного пользователя,
         будучи авторизованным этим пользователем
         """
 
-        # Создание и авторизация пользователя
+        # Шаг1: Регистрация и авторизация нового пользователя
         uri_1 = "/user"
         data = self.prepare_registration_data()
         response_1 = MyRequests.post(uri_1, data=data)
@@ -64,7 +64,8 @@ class TestUserDelete(BaseCase):
         }
         response_2 = MyRequests.post(uri_2, data=login_data)
 
-        # Попытка удаления обычного пользователя с авторизацией под этим пользователем
+        # Шаг2: Попытка удаления только что созданного пользователя
+        #       с авторизацией под этим пользователем
         auth_sid = self.get_cookie(response_2, "auth_sid")
         token = self.get_header(response_2, "x-csrf-token")
         uri_3 = f"/user/{user_id}"
@@ -75,7 +76,7 @@ class TestUserDelete(BaseCase):
         assert response_3.content.decode("utf-8") == '{"success":"!"}', \
             f"content ответа {response_3.content}"
 
-        # Проверка того, что ранее созданный пользователь был удалён
+        # Шаг3: Проверка того, что ранее созданный пользователь был удалён
         uri_4 = f"/user/{user_id}"
         response_4 = MyRequests.get(uri_4, headers={"x-csrf-token": token},
                                     cookies={"auth_sid": auth_sid})
@@ -88,20 +89,20 @@ class TestUserDelete(BaseCase):
     @allure.tag("Testing", "Rest API", "Python")
     @allure.label("owner", "Andrei")
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_delete_user_auth_as_existing_static_user(self):
+    def test_delete_just_created_user_auth_as_existing_static_user(self):
         """
-        Тест на удаление обычного пользователя,
+        Тест на удаление только что созданного пользователя,
         будучи авторизованным существующим статическим пользователем
         """
 
-        # Создание первого пользователя
+        # Шаг1: Регистрация нового пользователя
         data_1 = self.prepare_registration_data()
         uri_1 = "/user"
         response_1 = MyRequests.post(uri_1, data=data_1)
         Assertions.assert_code_status(response_1, 200)
         user_id = self.get_json_value(response_1, "id")
 
-        # Авторизация существующего статического пользователя
+        # Шаг2: Авторизация существующего статического пользователя
         login_data = {
             "email": "vinkotov@example.com",
             "password": "1234"
@@ -109,8 +110,8 @@ class TestUserDelete(BaseCase):
         uri_2 = "/user/login"
         response_2 = MyRequests.post(uri_2, data=login_data)
 
-        # Попытка удаления созданного пользователя
-        # с авторизацией существующим статическим пользователем
+        # Шаг3: Попытка удаления созданного пользователя
+        #       с авторизацией существующим статическим пользователем
         auth_sid = self.get_cookie(response_2, "auth_sid")
         token = self.get_header(response_2, "x-csrf-token")
         uri_3 = f"/user/{user_id}"
@@ -127,18 +128,18 @@ class TestUserDelete(BaseCase):
     @allure.severity(allure.severity_level.CRITICAL)
     def test_delete_user_auth_as_different_user(self):
         """
-        Тест на удаление обычного пользователя,
-        будучи авторизованным другим обычным пользователем
+        Тест на удаление только что созданного пользователя,
+        будучи авторизованным другим только что созданным пользователем
         """
 
-        # Создание первого пользователя
+        # Шаг1: Регистрация первого пользователя
         data_1 = self.prepare_registration_data()
         uri_1 = "/user"
         response_1 = MyRequests.post(uri_1, data=data_1)
         Assertions.assert_code_status(response_1, 200)
         user_id = self.get_json_value(response_1, "id")
 
-        # Создание и авторизация второго пользователя
+        # Шаг2: Регистрация и авторизация второго пользователя
         data_2 = self.prepare_registration_data()
         response_2 = MyRequests.post(uri_1, data=data_2)
         Assertions.assert_code_status(response_1, 200)
@@ -152,8 +153,8 @@ class TestUserDelete(BaseCase):
         }
         response_3 = MyRequests.post(uri_2, data=login_data)
 
-        # Попытка удаления первого пользователя с авторизацией
-        # под вторым пользователем
+        # Шаг3: Попытка удаления первого созданного пользователя
+        #       с авторизацией под вторым созданным пользователем
         auth_sid = self.get_cookie(response_3, "auth_sid")
         token = self.get_header(response_3, "x-csrf-token")
         uri_3 = f"/user/{user_id}"

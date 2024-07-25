@@ -14,8 +14,11 @@ class TestEditUser(BaseCase):
     @allure.label("owner", "Andrei")
     @allure.severity(allure.severity_level.MINOR)
     def test_edit_just_created_user(self):
+        """
+        Тест на редактирование данных только что созданного пользователя
+        """
 
-        # Регистрация нового пользователя
+        # Шаг1: Регистрация нового пользователя
         register_data = self.prepare_registration_data()
         uri_1 = "/user"
 
@@ -29,7 +32,7 @@ class TestEditUser(BaseCase):
         password = register_data["password"]
         user_id = self.get_json_value(response_1, "id")
 
-        # Авторизация пользователя
+        # Шаг2: Авторизация созданного пользователя
         uri_2 = "/user/login"
         login_data = {
             "email": email,
@@ -40,7 +43,7 @@ class TestEditUser(BaseCase):
         auth_sid = self.get_cookie(response_2, "auth_sid")
         token = self.get_header(response_2, "x-csrf-token")
 
-        # Редактирование данных пользователя
+        # Шаг3: Редактирование данных созданного пользователя
         new_name = "Changed Name"
         uri_3 = f"/user/{user_id}"
         response_3 = MyRequests.put(uri_3, headers={"x-csrf-token": token},
@@ -48,7 +51,8 @@ class TestEditUser(BaseCase):
 
         Assertions.assert_code_status(response_3, 200)
 
-        # Получение данных пользователя
+        # Шаг4: Получение данных пользователя для проверки того,
+        #        что редактирование его данных было выполнено
         response_4 = MyRequests.get(uri_3, headers={"x-csrf-token": token}, cookies={"auth_sid": auth_sid})
 
         Assertions.assert_json_value_by_name(response_4, "firstName", new_name,
@@ -60,17 +64,18 @@ class TestEditUser(BaseCase):
     @allure.severity(allure.severity_level.CRITICAL)
     def test_edit_just_created_user_without_auth(self):
         """
-        Тест на изменение данных пользователя, будучи неавторизованным
+        Тест на изменение данных только что созданного пользователя
+        без авторизации этим пользователем
         """
 
-        # Создание пользователя
+        # Шаг1: Регистрация нового пользователя
         data = self.prepare_registration_data()
         uri_1 = "/user"
         response_1 = MyRequests.post(uri_1, data=data)
         Assertions.assert_code_status(response_1, 200)
         user_id = self.get_json_value(response_1, "id")
 
-        # Попытка редактирования данных пользователя без авторизации
+        # Шаг2: Попытка редактирования данных пользователя без авторизации этим пользователем
         new_name = "Changed Name"
         uri_2 = f"/user/{user_id}"
         response_2 = MyRequests.put(uri_2, data={"firstName": new_name})
@@ -85,18 +90,18 @@ class TestEditUser(BaseCase):
     @allure.severity(allure.severity_level.CRITICAL)
     def test_edit_just_created_user_auth_as_existing_static_user(self):
         """
-        Тест на изменение данных одного пользователя,
+        Тест на изменение данных только что созданного пользователя,
         будучи авторизованными существующим СТАТИЧЕСКИМ пользователем
         """
 
-        # Создание пользователя
+        # Шаг1: Регистрация нового пользователя
         data = self.prepare_registration_data()
         uri_1 = "/user"
         response_1 = MyRequests.post(uri_1, data=data)
         Assertions.assert_code_status(response_1, 200)
         user_id = self.get_json_value(response_1, "id")
 
-        # Авторизация существующего статического пользователя
+        # Шаг2: Выполнение авторизации существующего статического пользователя
         login_data = {
             "email": "vinkotov@example.com",
             "password": "1234"
@@ -104,7 +109,7 @@ class TestEditUser(BaseCase):
         uri_2 = "/user/login"
         response_2 = MyRequests.post(uri_2, data=login_data)
 
-        # Попытка редактирования данных созданного пользователя
+        # Шаг3: Попытка редактирования данных созданного пользователя
         # с авторизацией существующим статическим пользователем
         new_name = "Changed Name"
         auth_sid = self.get_cookie(response_2, "auth_sid")
@@ -114,7 +119,7 @@ class TestEditUser(BaseCase):
                                     cookies={"auth_sid": auth_sid}, data={"firstName": new_name})
 
         Assertions.assert_code_status(response_3, 400)
-        assert response_3.content.decode("utf-8") == '{"error":"Please, do not edit test users with ID 1, 2, 3, 4 or 5."}', \
+        assert response_3.content.decode("utf-8") == '{"error":"Please, do not edit test use7rs with ID 1, 2, 3, 4 or 5."}', \
             f"content ответа {response_3.content}"
 
 
@@ -123,18 +128,18 @@ class TestEditUser(BaseCase):
     @allure.severity(allure.severity_level.CRITICAL)
     def test_edit_just_created_user_auth_as_different_user(self):
         """
-        Тест на изменение данных пользователя,
-        будучи авторизованными другим обычным пользователем
+        Тест на изменение данных только что созданного пользователя,
+        будучи авторизованными другим только что созданным пользователем
         """
 
-        # Создание первого пользователя
+        # Шаг1: Регистрация первого пользователя
         data_1 = self.prepare_registration_data()
         uri_1 = "/user"
         response_1 = MyRequests.post(uri_1, data=data_1)
         Assertions.assert_code_status(response_1, 200)
         user_id = self.get_json_value(response_1, "id")
 
-        # Создание и авторизация второго пользователя
+        # Шаг2: регистрация и авторизация второго пользователя
         data_2 = self.prepare_registration_data()
         response_2 = MyRequests.post(uri_1, data=data_2)
         Assertions.assert_code_status(response_1, 200)
@@ -148,8 +153,8 @@ class TestEditUser(BaseCase):
         }
         response_3 = MyRequests.post(uri_2, data=login_data)
 
-        # Попытка редактирования данных первого пользователя
-        # с авторизацией вторым созданным пользователем
+        # Шаг3: Попытка редактирования данных первого созданного пользователя
+        #       с авторизацией вторым созданным пользователем
         new_name = "Changed Name"
         auth_sid = self.get_cookie(response_3, "auth_sid")
         token = self.get_header(response_3, "x-csrf-token")
@@ -170,7 +175,7 @@ class TestEditUser(BaseCase):
         Тест на изменение email пользователя, будучи авторизованными тем же пользователем,
         на новый email без символа @
         """
-        # Создание и авторизация пользователя
+        # Шаг1: Регистрация и авторизация пользователя
         uri_1 = "/user"
         data = self.prepare_registration_data()
         response_1 = MyRequests.post(uri_1, data=data)
@@ -186,7 +191,7 @@ class TestEditUser(BaseCase):
         }
         response_2 = MyRequests.post(uri_2, data=login_data)
 
-        # Попытка изменения email созданного пользователя на некорректный
+        # Шаг2: Попытка изменения email созданного пользователя на некорректный
         # с авторизацией этого пользователя
         new_email = "some_user_example.com"
         auth_sid = self.get_cookie(response_2, "auth_sid")
@@ -208,7 +213,7 @@ class TestEditUser(BaseCase):
         Тест на изменение firstName пользователя, будучи авторизованными тем же пользователем,
         на очень короткое значение в один символ
         """
-        # Создание и авторизация пользователя
+        # Шаг1: Регистрация и авторизация пользователя
         uri_1 = "/user"
         data = self.prepare_registration_data()
         response_1 = MyRequests.post(uri_1, data=data)
@@ -224,8 +229,8 @@ class TestEditUser(BaseCase):
         }
         response_2 = MyRequests.post(uri_2, data=login_data)
 
-        # Попытка изменения firstName созданного пользователя на значение длиной
-        # в один символ с авторизацией этого пользователя
+        # Шаг2: Попытка изменения firstName созданного пользователя на значение
+        # длиной в один символ с авторизацией этого пользователя
         new_name = "A"
         auth_sid = self.get_cookie(response_2, "auth_sid")
         token = self.get_header(response_2, "x-csrf-token")
