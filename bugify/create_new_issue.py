@@ -16,6 +16,6 @@ assert response.json()["message"] == "Issue has been created.", "Баг-репо
 issue_id = response.json()["issue_id"]
 url = "https://bugify.stqa.ru/api/issues/{}.json".format(issue_id)
 response = requests.get(url, auth=(username, password))
-assert response.status_code == 200, f"Вернулся неверный код ответа! Баг-репорт {issue_id} не найдена!"
+assert response.status_code == 200, f"Вернулся неверный код ответа! Баг-репорт {issue_id} не найден!"
 print(f"Issue {issue_id}:")
 print(response.text)
