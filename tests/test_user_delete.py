@@ -6,7 +6,7 @@ import allure
 @allure.parent_suite("Тесты")
 @allure.suite("Набор тестов, проверяющих возможность удалить пользователя")
 @allure.sub_suite("Сценарии удаления пользователя")
-
+@allure.label("category", "Класс TestUserDelete")
 @allure.epic("Сценарии удаления пользователя")
 class TestUserDelete(BaseCase):
 

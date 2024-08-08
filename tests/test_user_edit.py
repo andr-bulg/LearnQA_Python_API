@@ -6,13 +6,13 @@ import allure
 @allure.parent_suite("Тесты")
 @allure.suite("Набор тестов, проверяющих возможность редактировать данные пользователя")
 @allure.sub_suite("Сценарии редактирования данных пользователя")
-
 @allure.epic("Сценарии редактирования учётных данных пользователя")
 class TestEditUser(BaseCase):
 
     @allure.tag("Testing", "Rest API", "Python")
-    @allure.label("owner", "Andrei")
+    #@allure.label("owner", "Andrei")
     @allure.severity(allure.severity_level.MINOR)
+    @allure.label("Categories", "Known issues")
     def test_edit_just_created_user(self):
         """
         Тест на редактирование данных только что созданного пользователя
@@ -60,8 +60,9 @@ class TestEditUser(BaseCase):
 
 
     @allure.tag("Testing", "Rest API", "Python")
-    @allure.label("owner", "Andrei")
+    #@allure.label("owner", "Andrei")
     @allure.severity(allure.severity_level.CRITICAL)
+    @allure.label("Categories", "Product defects")
     def test_edit_just_created_user_without_auth(self):
         """
         Тест на изменение данных только что созданного пользователя
@@ -86,12 +87,13 @@ class TestEditUser(BaseCase):
 
 
     @allure.tag("Testing", "Rest API", "Python")
-    @allure.label("owner", "Andrei")
+    #@allure.label("owner", "Andrei")
+    #@allure.label("category", "Known issues")
     @allure.severity(allure.severity_level.CRITICAL)
     def test_edit_just_created_user_auth_as_existing_static_user(self):
         """
         Тест на изменение данных только что созданного пользователя,
-        будучи авторизованными существующим СТАТИЧЕСКИМ пользователем
+        будучи авторизованными существующим статическим пользователем
         """
 
         # Шаг1: Регистрация нового пользователя
@@ -119,7 +121,7 @@ class TestEditUser(BaseCase):
                                     cookies={"auth_sid": auth_sid}, data={"firstName": new_name})
 
         Assertions.assert_code_status(response_3, 400)
-        assert response_3.content.decode("utf-8") == '{"error":"Please, do not edit test use7rs with ID 1, 2, 3, 4 or 5."}', \
+        assert response_3.content.decode("utf-8") == '{"error":"Please, do not edit test users with ID 1, 2, 3, 4 or 5."}', \
             f"content ответа {response_3.content}"
 
 
